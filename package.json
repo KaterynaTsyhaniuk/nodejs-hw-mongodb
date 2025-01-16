@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint src/**/*.js",
     "start": "node ./src/index.js",
@@ -19,7 +20,10 @@
   },
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "pino-http": "^10.4.0"
+    "mongoose": "^8.9.5",
+    "pino-http": "^10.4.0",
+    "pino-pretty": "^7.0.0"
   }
 }
