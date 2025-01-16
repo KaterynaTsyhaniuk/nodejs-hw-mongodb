@@ -7,9 +7,40 @@ import { initMangoConnection } from './db/initMongoConnection.js';
 import { Contact } from './services/contacts.js';
 
 const PORT = Number(getEnvVar('PORT', '3000'));
+const app = express();
+app.get('/contacts', async (req, res) => {
+  try {
+    const contacts = await Contact.find();
+    res.json({
+      status: 200,
+      message: 'Successfully found contacts!',
+      data: contacts,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+});
+
+app.get('/contacts/:contactId', async (req, res) => {
+  const { contactId } = req.params;
+  try {
+    const contact = await Contact.findById(contactId);
+
+    if (!contact) {
+      return res.status(404).json({ message: 'Contact not found' });
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: `Successfully found contact with id ${contactId}!`,
+      data: contact,
+    });
+  } catch (error) {
+    console.error(error);
+  }
+});
 
 export async function setupServer() {
-  const app = express();
   try {
     await initMangoConnection();
     app.use(express.json());
@@ -23,38 +54,6 @@ export async function setupServer() {
         },
       }),
     );
-
-    app.get('/contacts', async (req, res) => {
-      try {
-        const contacts = await Contact.find();
-        res.json({
-          status: 200,
-          message: 'Successfully found contacts!',
-          data: contacts,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    });
-
-    app.get('/contacts/:contactId', async (req, res) => {
-      const { contactId } = req.params;
-      try {
-        const contact = await Contact.findById(contactId);
-
-        if (!contact) {
-          return res.status(404).json({ message: 'Contact not found' });
-        }
-
-        res.status(200).json({
-          status: 200,
-          message: `Successfully found contact with id ${contactId}!`,
-          data: contact,
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    });
 
     app.get('/', (req, res) => {
       res.json({ message: 'Hello Contacts' });
