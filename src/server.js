@@ -3,11 +3,12 @@ import 'dotenv/config';
 import pino from 'pino-http';
 import { getEnvVar } from './utils/getEnvVar.js';
 import cors from 'cors';
-import { initMangoConnection } from './db/initMongoConnection.js';
-import { Contact } from './services/contacts.js';
+import { Contact } from './db/models/contacts.js';
 
 const PORT = Number(getEnvVar('PORT', '3000'));
+
 const app = express();
+
 app.get('/contacts', async (req, res) => {
   try {
     const contacts = await Contact.find();
@@ -42,7 +43,6 @@ app.get('/contacts/:contactId', async (req, res) => {
 
 export async function setupServer() {
   try {
-    await initMangoConnection();
     app.use(express.json());
 
     app.use(cors());

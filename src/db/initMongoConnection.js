@@ -1,16 +1,18 @@
 import mongoose from 'mongoose';
+import { getEnvVar } from '../utils/getEnvVar.js';
 
-const DB_URI =
-  'mongodb+srv://kyzkakatryska:nIsGuTmiuKBTj2v7@clusterkate.9ibcv.mongodb.net/contacts?retryWrites=true&w=majority&appName=ClusterKaTe';
-
-async function initMangoConnection() {
+export async function initMangoConnection() {
   try {
-    await mongoose.connect(DB_URI);
+    const user = getEnvVar('MONGODB_USER');
+    const pwd = getEnvVar('MONGODB_PASSWORD');
+    const url = getEnvVar('MONGODB_URL');
+    const db = getEnvVar('MONGODB_DB');
+    await mongoose.connect(
+      `mongodb+srv://${user}:${pwd}@${url}/${db}?retryWrites=true&w=majority`,
+    );
     console.log('Mongo connection successfully established!');
   } catch (error) {
     console.error(error);
     throw error;
   }
 }
-
-export { initMangoConnection };
