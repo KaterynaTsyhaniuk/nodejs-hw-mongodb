@@ -1,33 +1,80 @@
-import { Contact } from '../db/models/contacts.js';
+import createHttpError from 'http-errors';
+import {
+  changeContactPhoneNumber,
+  createContact,
+  deleteContact,
+  getContact,
+  getContacts,
+} from '../services/contacts.js';
 
 export async function getContactsController(req, res) {
-  try {
-    const contacts = await Contact.find();
-    res.json({
-      status: 200,
-      message: 'Successfully found contacts!',
-      data: contacts,
-    });
-  } catch (error) {
-    console.error(error);
-  }
+  const contacts = await getContacts();
+  res.json(contacts);
 }
 
 export async function getContactController(req, res) {
   const { contactId } = req.params;
-  try {
-    const contact = await Contact.findById(contactId);
 
-    if (!contact) {
-      return res.status(404).json({ message: 'Contact not found' });
-    }
+  const contact = await getContact(contactId);
 
-    res.status(200).json({
-      status: 200,
-      message: `Successfully found contact with id ${contactId}!`,
-      data: contact,
-    });
-  } catch (error) {
-    console.error(error);
+  if (!contact) {
+    throw createHttpError(404, 'Contact not found');
   }
+
+  res.json({
+    status: 200,
+    message: 'Contact received successfully',
+    data: contact,
+  });
+}
+
+export async function createContactController(req, res) {
+  const contact = {
+    name: req.body.name,
+    phoneNumber: req.body.phoneNumber,
+    email: req.body.email,
+    isFavourite: req.body.isFavourite,
+    contactType: req.body.contactType,
+  };
+
+  const result = await createContact(contact);
+
+  res.status(201).json({
+    status: 201,
+    message: 'Successfully created a contact!',
+    data: result,
+  });
+}
+
+export async function deleteContactController(req, res) {
+  const { contactId } = req.params;
+
+  const result = await deleteContact(contactId);
+
+  if (result === null) {
+    throw createHttpError(404, 'Contact not found!');
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: 'Contact  deleted successfully',
+    data: result,
+  });
+}
+
+export async function changeContactPhoneNumberController(req, res) {
+  const { contactId } = req.params;
+  const { phoneNumber } = req.body;
+
+  const result = await changeContactPhoneNumber(contactId, phoneNumber);
+
+  if (result === null) {
+    throw createHttpError(404, 'Contact not found!');
+  }
+
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully parched a contact',
+    data: result,
+  });
 }
