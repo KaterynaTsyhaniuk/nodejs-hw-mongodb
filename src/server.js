@@ -13,7 +13,11 @@ const app = express();
 
 export async function setupServer() {
   try {
-    app.use(express.json());
+    app.use(
+      express.json({
+        type: ['application/json', 'application/vnd.api+json'],
+      }),
+    );
 
     app.use(cors());
 

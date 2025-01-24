@@ -1,5 +1,5 @@
 import express from 'express';
-import { Router } from 'express';
+// import { Router } from 'express';
 import {
   getContactController,
   getContactsController,
@@ -9,7 +9,7 @@ import {
 } from '../controllers/contacts.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 
-const contactRouter = Router();
+const contactRouter = express.Router();
 const jsonParser = express.json();
 
 contactRouter.get('/contacts', ctrlWrapper(getContactsController));
