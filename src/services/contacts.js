@@ -16,6 +16,20 @@ export function deleteContact(contactId) {
   return Contact.findByIdAndDelete(contactId);
 }
 
-export function changeContactPhoneNumber(contactId, phoneNumber) {
-  return Contact.findByIdAndUpdate(contactId, { phoneNumber }, { new: true });
+export async function updateContact(contactId, payload, options = {}) {
+  const rawResult = await Contact.findOneAndUpdate(
+    { _id: contactId },
+    payload,
+    {
+      new: true,
+      includeResultMetadata: true,
+      ...options,
+    },
+  );
+  if (!rawResult || !rawResult.value) return null;
+
+  return {
+    contact: rawResult.value,
+    isNew: Boolean(rawResult?.lastErrorObject?.upserted),
+  };
 }
