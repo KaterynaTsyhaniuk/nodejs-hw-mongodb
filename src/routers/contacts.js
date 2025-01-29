@@ -34,6 +34,7 @@ contactRouter.patch(
   '/contacts/:contactId',
   isValidId,
   jsonParser,
+  validateBody(contactSchema),
   ctrlWrapper(patchContactController),
 );
 

@@ -24,8 +24,6 @@ export const contactSchema = Joi.object({
     'boolean.base': 'Contact "isFavourite" must be a boolean',
   }),
   contactType: Joi.string()
-    .min(3)
-    .max(20)
     .valid('work', 'home', 'personal')
     .required()
     .messages({

@@ -6,13 +6,20 @@ import {
   getContacts,
   updateContact,
 } from '../services/contacts.js';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 
 export async function getContactsController(req, res) {
-  const contacts = await getContacts();
+  // console.log(req.query);
+
+  const { page, perPage } = parsePaginationParams(req.query);
+
+  console.log({ page, perPage });
+
+  const data = await getContacts({ page, perPage });
   res.status(200).json({
     status: 200,
     message: 'Contacts received successfully',
-    data: contacts,
+    data,
   });
 }
 
