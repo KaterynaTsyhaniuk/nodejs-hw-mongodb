@@ -1,6 +1,12 @@
 import { Contact } from '../db/models/contacts.js';
+import { SORT_ORDER } from '../index.js';
 
-export async function getContacts({ page, perPage, sortBy, sortOrder }) {
+export async function getContacts({
+  page = 1,
+  perPage = 10,
+  sortBy = '_id',
+  sortOrder = SORT_ORDER.ASC,
+}) {
   const skip = page > 0 ? (page - 1) * perPage : 0;
 
   const [total, contacts] = await Promise.all([
