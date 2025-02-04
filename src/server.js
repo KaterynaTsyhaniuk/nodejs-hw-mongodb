@@ -3,9 +3,9 @@ import 'dotenv/config';
 import pino from 'pino-http';
 import { getEnvVar } from './utils/getEnvVar.js';
 import cors from 'cors';
-import contactRouter from './routers/contacts.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import router from './routers/index.js';
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 
@@ -33,7 +33,7 @@ export async function setupServer() {
       res.json({ message: 'Hello Contacts' });
     });
 
-    app.use(contactRouter);
+    app.use(router);
 
     app.use(notFoundHandler);
 
