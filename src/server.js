@@ -1,4 +1,5 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import 'dotenv/config';
 import pino from 'pino-http';
 import { getEnvVar } from './utils/getEnvVar.js';
@@ -10,6 +11,8 @@ import router from './routers/index.js';
 const PORT = Number(getEnvVar('PORT', '3000'));
 
 const app = express();
+
+app.use(cookieParser());
 
 export async function setupServer() {
   try {
