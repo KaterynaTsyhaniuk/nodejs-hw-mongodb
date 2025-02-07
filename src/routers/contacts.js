@@ -15,23 +15,19 @@ import { contactSchema } from '../validation/contacts.js';
 const contactRouter = express.Router();
 const jsonParser = express.json();
 
-contactRouter.get('/contacts', ctrlWrapper(getContactsController));
+contactRouter.get('/', ctrlWrapper(getContactsController));
 
-contactRouter.get(
-  '/contacts/:contactId',
-  isValidId,
-  ctrlWrapper(getContactController),
-);
+contactRouter.get('/:contactId', isValidId, ctrlWrapper(getContactController));
 
 contactRouter.post(
-  '/contacts',
+  '/',
   jsonParser,
   validateBody(contactSchema),
   ctrlWrapper(createContactController),
 );
 
 contactRouter.patch(
-  '/contacts/:contactId',
+  '/:contactId',
   isValidId,
   jsonParser,
   validateBody(contactSchema),
@@ -39,7 +35,7 @@ contactRouter.patch(
 );
 
 contactRouter.delete(
-  '/contacts/:contactId',
+  '/:contactId',
   isValidId,
   ctrlWrapper(deleteContactController),
 );

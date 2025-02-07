@@ -20,6 +20,7 @@ export async function getContactsController(req, res) {
     sortBy,
     sortOrder,
     filter,
+    userId: req.user.id,
   });
 
   res.status(200).json({
@@ -29,13 +30,17 @@ export async function getContactsController(req, res) {
   });
 }
 
-export async function getContactController(req, res) {
+export async function getContactController(req, res, next) {
   const { contactId } = req.params;
 
   const contact = await getContact(contactId);
 
   if (!contact) {
     throw createHttpError(404, 'Contact not found');
+  }
+
+  if (!contact.userId || contact.userId.toString() !== req.user.id.toString()) {
+    return next(new createHttpError.Forbidden('Contact is forbidden'));
   }
 
   res.json({
@@ -52,6 +57,7 @@ export async function createContactController(req, res) {
     email: req.body.email,
     isFavourite: req.body.isFavourite,
     contactType: req.body.contactType,
+    userId: req.user.id,
   };
 
   const result = await createContact(contact);
