@@ -20,13 +20,13 @@ export async function registerUser(payload) {
 export async function loginUser(email, password) {
   const user = await User.findOne({ email });
 
-  if (user === null) {
+  if (!user) {
     throw createHttpError(404, 'User not found');
   }
 
   const isMatch = await bcrypt.compare(password, user.password);
 
-  if (isMatch !== true) {
+  if (!isMatch) {
     throw createHttpError(401, 'Email or password is incorrect');
   }
 
@@ -35,17 +35,19 @@ export async function loginUser(email, password) {
   const accessToken = crypto.randomBytes(30).toString('base64');
   const refreshToken = crypto.randomBytes(30).toString('base64');
 
-  return Session.create({
+  const session = await Session.create({
     userId: user._id,
     accessToken,
     refreshToken,
     accessTokenValidUntil: new Date(Date.now() + 15 * 60 * 1000),
     refreshTokenValidUntil: new Date(Date.now() + 24 * 60 * 60 * 1000 * 30),
   });
+
+  return session;
 }
 
-export async function refreshSession(sessionId, refreshToken) {
-  const session = await Session.findById(sessionId);
+export async function refreshSession(sessionId, refreshToken, userId) {
+  const session = await Session.findOne({ _id: sessionId, userId });
 
   if (session === null) {
     throw createHttpError(401, 'Session not found!');
@@ -59,7 +61,7 @@ export async function refreshSession(sessionId, refreshToken) {
     throw createHttpError(401, 'Refresh token is expired');
   }
 
-  await Session.deleteOne({ _id: session._id });
+  await Session.deleteOne({ _id: sessionId, userId });
 
   const newAccessToken = crypto.randomBytes(30).toString('base64');
   const newRefreshToken = crypto.randomBytes(30).toString('base64');
@@ -73,6 +75,6 @@ export async function refreshSession(sessionId, refreshToken) {
   });
 }
 
-export function logoutUser(sessionId) {
-  return Session.deleteOne({ _id: sessionId });
+export function logoutUser(sessionId, userId) {
+  return Session.deleteOne({ _id: sessionId, userId });
 }

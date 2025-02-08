@@ -44,21 +44,21 @@ export async function getContacts({
   };
 }
 
-export function getContact(contactId) {
-  return Contact.findById(contactId);
+export function getContact(contactId, userId) {
+  return Contact.findOne({ _id: contactId, userId });
 }
 
 export function createContact(contact) {
   return Contact.create(contact);
 }
 
-export function deleteContact(contactId) {
-  return Contact.findByIdAndDelete(contactId);
+export function deleteContact(contactId, userId) {
+  return Contact.findOneAndDelete({ _id: contactId, userId });
 }
 
-export async function updateContact(contactId, payload, options = {}) {
+export async function updateContact(contactId, userId, payload, options = {}) {
   const rawResult = await Contact.findOneAndUpdate(
-    { _id: contactId },
+    { _id: contactId, userId },
     payload,
     {
       new: true,
