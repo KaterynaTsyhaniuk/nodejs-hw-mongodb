@@ -64,8 +64,10 @@ export async function updateContact(contactId, userId, payload, options = {}) {
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     throw new Error('Invalid userId format');
   }
+
+  console.log('Searching for:', { contactId, userId });
   const rawResult = await Contact.findOneAndUpdate(
-    { _id: contactId, userId },
+    { _id: contactId, userId: new mongoose.Types.ObjectId(userId) },
     payload,
     {
       new: true,
