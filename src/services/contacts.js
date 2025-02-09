@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import { Contact } from '../db/models/contacts.js';
 import { SORT_ORDER } from '../index.js';
 
@@ -57,6 +58,12 @@ export function deleteContact(contactId, userId) {
 }
 
 export async function updateContact(contactId, userId, payload, options = {}) {
+  if (!mongoose.Types.ObjectId.isValid(contactId)) {
+    throw new Error('Invalid contactId format');
+  }
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    throw new Error('Invalid userId format');
+  }
   const rawResult = await Contact.findOneAndUpdate(
     { _id: contactId, userId },
     payload,
