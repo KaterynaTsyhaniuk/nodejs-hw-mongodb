@@ -1,10 +1,11 @@
 import crypto from 'node:crypto';
-
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 import createHttpError from 'http-errors';
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
+import { sendMail } from '../utils/sendMail.js';
 
 export async function registerUser(payload) {
   const user = await User.findOne({ email: payload.email });
@@ -77,4 +78,35 @@ export async function refreshSession(sessionId, refreshToken, userId) {
 
 export function logoutUser(sessionId, userId) {
   return Session.deleteOne({ _id: sessionId, userId });
+}
+
+export async function sendResetEmail(email) {
+  const user = await User.findOne({ email });
+
+  if (user === null) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  const resetToken = jwt.sign(
+    { sub: user._id, email: user.email },
+    process.env.JWT_SECRET,
+    { expiresIn: '5m' },
+  );
+
+  // console.log(resetToken);
+
+  try {
+    await sendMail({
+      from: 'kyzkakatryska@gmail.com',
+      to: email,
+      subject: 'Reset your password',
+      html: `To reset your password please visit this <a href="http://localhost:3000/password-reset?token=${resetToken}">Link</a>`,
+    });
+  } catch (error) {
+    console.error(error);
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
 }
