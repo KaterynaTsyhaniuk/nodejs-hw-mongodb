@@ -5,6 +5,7 @@ import {
   loginSchema,
   registerSchema,
   sendResetEmailSchema,
+  resetPasswordSchema,
 } from '../validation/auth.js';
 import {
   loginController,
@@ -12,6 +13,7 @@ import {
   refreshController,
   registerController,
   sendResetEmailController,
+  resetPasswordController,
 } from '../controllers/auth.js';
 const authRoutes = express.Router();
 
@@ -41,5 +43,7 @@ authRoutes.post(
   validateBody(sendResetEmailSchema),
   ctrlWrapper(sendResetEmailController),
 );
+
+authRoutes.post('/reset-password', jsonParser, validateBody(resetPasswordSchema), ctrlWrapper(resetPasswordController));
 
 export default authRoutes;

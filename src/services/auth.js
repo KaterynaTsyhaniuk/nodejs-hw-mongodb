@@ -1,3 +1,7 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import handlebars from 'handlebars';
+
 import crypto from 'node:crypto';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
@@ -6,6 +10,12 @@ import createHttpError from 'http-errors';
 import { User } from '../db/models/user.js';
 import { Session } from '../db/models/session.js';
 import { sendMail } from '../utils/sendMail.js';
+import { getEnvVar } from '../utils/getEnvVar.js';
+
+const RESET_PASSWORD_TEMPLATE = fs.readFileSync(
+  path.resolve('src/templates/reset-password.hbs'),
+  { encoding: 'utf-8' },
+);
 
 export async function registerUser(payload) {
   const user = await User.findOne({ email: payload.email });
@@ -89,18 +99,18 @@ export async function sendResetEmail(email) {
 
   const resetToken = jwt.sign(
     { sub: user._id, email: user.email },
-    process.env.JWT_SECRET,
+    getEnvVar('JWT_SECRET'),
     { expiresIn: '5m' },
   );
 
   // console.log(resetToken);
-
+  const html = handlebars.compile(RESET_PASSWORD_TEMPLATE);
   try {
     await sendMail({
-      from: 'kyzkakatryska@gmail.com',
+      from: getEnvVar('SMTP_FROM'),
       to: email,
       subject: 'Reset your password',
-      html: `To reset your password please visit this <a href="http://localhost:3000/password-reset?token=${resetToken}">Link</a>`,
+      html: html({ resetToken, name: user.name }),
     });
   } catch (error) {
     console.error(error);
@@ -108,5 +118,30 @@ export async function sendResetEmail(email) {
       500,
       'Failed to send the email, please try again later.',
     );
+  }
+}
+
+export async function resetPassword(password, token) {
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    // console.log(decoded);
+    const user = await User.findOne({ _id: decoded.sub, email: decoded.email });
+
+    if (user === null) {
+      throw createHttpError(404, 'User not found');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await User.findByIdAndUpdate(user._id, { password: hashedPassword });
+  } catch (error) {
+    if (
+      error.name === 'JsonWebTokenError' ||
+      error.name === 'TokenExpiredError'
+    ) {
+      throw createHttpError(401, 'Token is expired or invalid.');
+    }
+
+    throw error;
   }
 }
