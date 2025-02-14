@@ -2,7 +2,7 @@ import Joi from 'joi';
 import { isValidObjectId } from 'mongoose';
 
 export const contactSchema = Joi.object({
-  name: Joi.string().min(3).max(20).required().messages({
+  name: Joi.string().trim().min(3).max(20).required().messages({
     'any.only': 'Contact name is required',
     'string.base': 'Contact name must be a string',
     'string.min': 'Contact name length must be at least 3 characters long',
