@@ -19,6 +19,7 @@ export async function getContactsController(req, res) {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortBy, sortOrder } = parseSortParams(req.query);
   const filter = parseFilterParams(req.query);
+
   const data = await getContacts({
     page,
     perPage,
@@ -46,6 +47,10 @@ export async function getContactController(req, res, next) {
 
   if (!contact.userId || contact.userId.toString() !== req.user.id.toString()) {
     return next(new createHttpError.Forbidden('Contact is forbidden'));
+  }
+
+  if (contact.photo) {
+    contact.photoUrl = contact.photo;
   }
 
   res.json({
@@ -118,16 +123,36 @@ export async function patchContactController(req, res, next) {
     return next(createHttpError(400, 'User ID is required'));
   }
 
-  const result = await updateContact(contactId, userId, req.body);
+  let updatedFields = { ...req.body };
+
+  if (req.file) {
+    let photo = null;
+
+    if (getEnvVar('ENABLE_CLOUDINARY') === 'true') {
+      const result = await uploadToCloudinary(req.file.path);
+      photo = result.secure_url;
+    } else {
+      const newFilePath = path.resolve(
+        'src',
+        'public/photos',
+        req.file.filename,
+      );
+      await fs.rename(req.file.path, newFilePath);
+      photo = `http://localhost:3000/photos/${req.file.filename}`;
+    }
+
+    updatedFields.photo = photo;
+  }
+
+  const result = await updateContact(contactId, userId, updatedFields);
 
   if (!result) {
-    next(createHttpError(404, 'Contact not found'));
-    return;
+    return next(createHttpError(404, 'Contact not found'));
   }
 
   res.json({
     status: 200,
-    message: `Successfully patched a student!`,
+    message: `Successfully patched the contact!`,
     data: result.contact,
   });
 }

@@ -134,6 +134,8 @@ export async function resetPassword(password, token) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     await User.findByIdAndUpdate(user._id, { password: hashedPassword });
+
+    await Session.deleteMany({ userId: user._id });
   } catch (error) {
     if (
       error.name === 'JsonWebTokenError' ||

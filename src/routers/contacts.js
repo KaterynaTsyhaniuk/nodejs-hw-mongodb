@@ -16,9 +16,18 @@ import { upload } from '../middlewares/upload.js';
 const contactRouter = express.Router();
 const jsonParser = express.json();
 
-contactRouter.get('/', ctrlWrapper(getContactsController));
+contactRouter.get(
+  '/',
+  upload.single('photo'),
+  ctrlWrapper(getContactsController),
+);
 
-contactRouter.get('/:contactId', isValidId, ctrlWrapper(getContactController));
+contactRouter.get(
+  '/:contactId',
+  upload.single('photo'),
+  isValidId,
+  ctrlWrapper(getContactController),
+);
 
 contactRouter.post(
   '/',
@@ -39,6 +48,7 @@ contactRouter.patch(
 
 contactRouter.delete(
   '/:contactId',
+  upload.single('photo'),
   isValidId,
   ctrlWrapper(deleteContactController),
 );
