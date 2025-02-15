@@ -44,6 +44,11 @@ authRoutes.post(
   ctrlWrapper(sendResetEmailController),
 );
 
-authRoutes.post('/reset-password', jsonParser, validateBody(resetPasswordSchema), ctrlWrapper(resetPasswordController));
+authRoutes.post(
+  '/reset-pwd',
+  jsonParser,
+  validateBody(resetPasswordSchema),
+  ctrlWrapper(resetPasswordController),
+);
 
 export default authRoutes;

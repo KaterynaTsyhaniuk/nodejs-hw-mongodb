@@ -144,6 +144,12 @@ export async function patchContactController(req, res, next) {
     updatedFields.photo = photo;
   }
 
+  Object.keys(updatedFields).forEach((key) => {
+    if (updatedFields[key] == null) {
+      delete updatedFields[key];
+    }
+  });
+
   const result = await updateContact(contactId, userId, updatedFields);
 
   if (!result) {
@@ -153,6 +159,6 @@ export async function patchContactController(req, res, next) {
   res.json({
     status: 200,
     message: `Successfully patched the contact!`,
-    data: result.contact,
+    data: result,
   });
 }
