@@ -24,13 +24,10 @@ export const contactSchema = Joi.object({
   isFavourite: Joi.boolean().messages({
     'boolean.base': 'Contact "isFavourite" must be a boolean',
   }),
-  contactType: Joi.string()
-    .valid('work', 'home', 'personal')
-    .required()
-    .messages({
-      'any.only': 'contactType must be one of [work, home, personal]',
-      'string.empty': 'contactType is not allowed to be empty',
-    }),
+  contactType: Joi.string().valid('work', 'home', 'personal').messages({
+    'any.only': 'contactType must be one of [work, home, personal]',
+    'string.empty': 'contactType is not allowed to be empty',
+  }),
   userId: Joi.string().custom((value, helper) => {
     if (value && !isValidObjectId(value)) {
       return helper.message('User id should be a valid mongo id');
