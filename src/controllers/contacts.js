@@ -159,6 +159,6 @@ export async function patchContactController(req, res, next) {
   res.json({
     status: 200,
     message: `Successfully patched the contact!`,
-    data: result,
+    data: result.contact,
   });
 }
