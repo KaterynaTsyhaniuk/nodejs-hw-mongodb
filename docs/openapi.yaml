@@ -14,9 +14,20 @@ servers:
   - url: http://localhost:3000
   # - url: #посилання на задеплоєний сайт
 paths:
-  /contacts/:contactId:
+  /contacts:
+    post:
+      $ref: ../swagger/paths/contacts/post.yaml
+    get:
+      $ref: ../swagger/paths/contacts/get.yaml
+
+  /contacts/{contactId}:
     get:
       $ref: ../swagger/paths/contacts/contactId/get.yaml
+    patch:
+      $ref: ../swagger/paths/contacts/contactId/patch.yaml
+    delete:
+      $ref: ../swagger/paths/contacts/contactId/delete.yaml
+
 components:
   securitySchemes:
     bearerAuth:
