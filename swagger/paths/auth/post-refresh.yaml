@@ -1,0 +1,42 @@
+tags:
+  - Auth
+summary: 'Refresh accessToken'
+description: 'Return new accessToken, if refreshToken is valid'
+operationId: refreshUser
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - refreshToken
+        properties:
+          refreshToken:
+            type: string
+            example: 'c29tZV9yYW5kb21fcmVmcmVzaF90b2tlbg...'
+responses:
+  '200':
+    description: 'Successfully refreshed a session!'
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/session.yaml'
+  '401':
+    description: 'Refresh token is expired'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: 'Refresh token is expired'

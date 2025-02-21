@@ -1,0 +1,10 @@
+tags:
+  - Auth
+summary: User logout
+operationId: logoutUser
+security:
+  - bearerAuth: []
+description: Logs out the current user by invalidating their session token.
+responses:
+  '204':
+    description: Successfully logged out. No content returned.

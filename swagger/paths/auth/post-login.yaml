@@ -1,0 +1,62 @@
+tags:
+  - Auth
+summary: User login
+description: 'User authorization, returns JWT tokens'
+operationId: loginUser
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        required:
+          - email
+          - password
+        properties:
+          email:
+            type: string
+            example: 'margarettsyhaniuk@gmail.com'
+          password:
+            type: string
+            example: 'margaretpassword'
+responses:
+  '200':
+    description: 'Successfully logged in an user!'
+    content:
+      application/json:
+        schema:
+          $ref: '../../components/schemas/session.yaml'
+  '401':
+    description: 'Email or password is incorrect'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: 'Email or password is incorrect'
+  '404':
+    description: 'User not found'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: 'Email or password is incorrect'

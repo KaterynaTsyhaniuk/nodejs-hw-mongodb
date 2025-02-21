@@ -1,0 +1,31 @@
+type: object
+required:
+  - userId
+  - accessToken
+  - refreshToken
+  - accessTokenValidUntil
+  - refreshTokenValidUntil
+properties:
+  userId:
+    description: ID of the user who owns this session
+    type: string
+    format: uuid
+    example: '64bfc2c5d8e9e10b7c4f8d3a'
+  accessToken:
+    description: JWT access token
+    type: string
+    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+  refreshToken:
+    description: JWT refresh token
+    type: string
+    example: 'c29tZV9yYW5kb21fcmVmcmVzaF90b2tlbg...'
+  accessTokenValidUntil:
+    type: string
+    format: date-time
+    description: accessToken expiration time
+    example: '2025-02-19T15:30:00Z'
+  refreshTokenValidUntil:
+    type: string
+    format: date-time
+    description: RefreshToken expiration time
+    example: '2025-03-19T15:30:00Z'

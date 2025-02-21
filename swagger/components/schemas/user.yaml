@@ -1,0 +1,20 @@
+type: object
+required:
+  - name
+  - email
+  - password
+properties:
+  name:
+    description: 'Name of the new user'
+    type: string
+    example: 'Margaret Tsyhaniuk'
+  email:
+    description: 'Email of the new user'
+    type: string
+    example: 'margarettsyhaniuk@gmail.com'
+    format: email
+  password:
+    description: 'Password of the new user'
+    type: string
+    example: 'margaretpassword'
+    format: password

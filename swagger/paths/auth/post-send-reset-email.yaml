@@ -1,0 +1,78 @@
+tags:
+  - Auth
+summary: Send password reset email
+description: Sends an email with a password reset link to the user.
+operationId: sendResetEmailUser
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        type: object
+        properties:
+          email:
+            type: string
+            format: email
+            example: 'margarettsyhaniuk@gmail.com'
+responses:
+  '200':
+    description: 'Reset password email has been successfully sent.'
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: 'Reset password email has been successfully sent.'
+            data:
+              type: object
+              example: {}
+  '400':
+    description: Bad request. Invalid email format or missing required fields.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 400
+            message:
+              type: string
+              example: 'Invalid email format.'
+  '404':
+    description: 'Not found. The requested user does not exist.'
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 404
+            message:
+              type: string
+              example: 'User not found.'
+  '500':
+    description: Internal server error. Failed to send the email, please try again later.
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            status:
+              type: integer
+              example: 500
+            message:
+              type: string
+              example: 'Failed to send the email, please try again later.'

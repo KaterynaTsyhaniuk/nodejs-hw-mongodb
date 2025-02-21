@@ -1,16 +1,20 @@
 import express from 'express';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import 'dotenv/config';
 import pino from 'pino-http';
 import { getEnvVar } from './utils/getEnvVar.js';
-import cors from 'cors';
+
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import router from './routers/index.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 const PORT = Number(getEnvVar('PORT', '3000'));
 
 const app = express();
+
+app.use('/api-docs', swaggerDocs());
 
 app.use(cookieParser());
 
