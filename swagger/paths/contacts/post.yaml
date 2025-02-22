@@ -6,6 +6,7 @@ description: 'Create a contact'
 security:
   - bearerAuth: []
 requestBody:
+  required: true
   content:
     multipart/form-data:
       schema:
@@ -14,37 +15,47 @@ requestBody:
           - name
           - phoneNumber
           - email
-          - isFavourite
-          - contactType
         properties:
           name:
-            description: "Contact's name"
             type: string
-            example: 'Keteryna Tsyhaniuk'
+            minLength: 3
+            maxLength: 20
+            description: Contact name (required).
+            example: 'Kateryna Tsyhaniuk'
           phoneNumber:
-            description: "Contact's phone number"
             type: string
-            example: '+380987678987'
+            minLength: 3
+            maxLength: 20
+            description: Contact phone number (required).
+            example: '+380987654321'
           email:
-            description: "Contact's email"
             type: string
-            example: 'kyzkakatryska@gmail.com'
+            minLength: 3
+            maxLength: 20
+            format: email
+            description: Contact email (required).
+            example: 'katerynatsyhaniuk@gmail.com'
           isFavourite:
-            description: 'Whether is contact favorite'
             type: boolean
-            example: false
+            description: Is the contact a favorite?.
+            example: true
           contactType:
-            description: "Contact's type contact"
             type: string
             enum: ['work', 'home', 'personal']
-            example: work
+            description: Contact type.
+            example: 'work'
+          userId:
+            type: string
+            description: Valid MongoDB user ID.
+            example: '6557a3c2b1f3b1a4d1f8e123'
           photo:
-            description: "Contact's photo"
             type: string
             format: binary
+            description: Contact photo.
+
 responses:
   '201':
-    description: 'Create a contact'
+    description: 'Successfully created a contact!'
     content:
       application/json:
         schema:

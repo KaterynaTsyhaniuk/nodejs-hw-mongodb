@@ -16,7 +16,7 @@ parameters:
 requestBody:
   required: true
   content:
-    application/json:
+    multipart/form-data:
       schema:
         type: object
         properties:
@@ -42,7 +42,10 @@ requestBody:
             type: string
             enum: ['work', 'home', 'personal']
             example: work
-
+          photo:
+            type: string
+            format: binary
+            description: Optional contact photo
 responses:
   '200':
     description: Contact updated successfully.

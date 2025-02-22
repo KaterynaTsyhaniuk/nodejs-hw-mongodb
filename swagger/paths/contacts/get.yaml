@@ -19,7 +19,6 @@ parameters:
       type: integer
       minimum: 1
       maximum: 100
-    description: Number of contacts per page
     example: 10
   - in: query
     name: sortBy
@@ -27,47 +26,13 @@ parameters:
       type: string
       enum:
         ['_id', 'name', 'email', 'contactType', 'isFavourite', 'phoneNumber']
-    description: Field to sort by
     example: 'name'
   - in: query
     name: sortOrder
     schema:
       type: string
       enum: ['asc', 'desc']
-    description: Sorting order (ascending or descending)
     example: 'asc'
-  - in: query
-    name: name
-    schema:
-      type: string
-    description: Filter contacts by name.
-    example: 'Kateryna Tsyhaniuk'
-  - in: query
-    name: email
-    schema:
-      type: string
-      format: email
-    description: Filter contacts by email.
-    example: 'katerynatsyhaniuk.com'
-  - in: query
-    name: phoneNumber
-    schema:
-      type: string
-    description: Filter contacts by phone number.
-    example: '+380987678987'
-  - in: query
-    name: isFavourite
-    schema:
-      type: boolean
-    description: Filter contacts by favorite status.
-    example: true
-  - in: query
-    name: contactType
-    schema:
-      type: string
-      enum: ['work', 'home', 'personal']
-    description: Filter contacts by type.
-    example: work
 
 responses:
   '200':
