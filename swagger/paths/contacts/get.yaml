@@ -8,31 +8,38 @@ security:
 parameters:
   - in: query
     name: page
+    required: false
     schema:
       type: integer
       minimum: 1
-    description: The page number for pagination
-    example: 1
+      example: 1
+      description: The page number for pagination
   - in: query
     name: perPage
+    required: false
     schema:
       type: integer
       minimum: 1
       maximum: 100
-    example: 10
+      example: 10
+      description: The number of contacts per page
   - in: query
     name: sortBy
+    required: false
     schema:
       type: string
       enum:
         ['_id', 'name', 'email', 'contactType', 'isFavourite', 'phoneNumber']
-    example: 'name'
+      example: 'name'
+      description: The field to sort by
   - in: query
     name: sortOrder
+    required: false
     schema:
       type: string
       enum: ['asc', 'desc']
-    example: 'asc'
+      example: 'asc'
+      description: The sorting order (ascending or descending)
 
 responses:
   '200':
@@ -53,7 +60,9 @@ responses:
               type: string
               example: 'Contacts received successfully'
             data:
-              $ref: ../../components/schemas/contact.yaml
+              type: array
+              items:
+                $ref: ../../components/schemas/contact.yaml
   '401':
     $ref: ../../components/responses/401.yaml
   '500':
