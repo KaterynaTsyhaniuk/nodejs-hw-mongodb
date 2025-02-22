@@ -13,10 +13,9 @@ tags:
     description: Auth operations.
   # теги, що ви будете використовувати
 servers:
-   - url: https://nodejs-hw-mongodb-ly4f.onrender.com
-     description: Production server (Render)
-  -  url: http://localhost:3000
-     description: Local development server
+  - url: http://localhost:3000
+
+  - url: https://nodejs-hw-mongodb-ly4f.onrender.com
 
 paths:
   /contacts:
