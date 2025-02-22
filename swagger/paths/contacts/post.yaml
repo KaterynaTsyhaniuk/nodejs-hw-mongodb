@@ -44,10 +44,6 @@ requestBody:
             enum: ['work', 'home', 'personal']
             description: Contact type.
             example: 'work'
-          userId:
-            type: string
-            description: Valid MongoDB user ID.
-            example: '6557a3c2b1f3b1a4d1f8e123'
           photo:
             type: string
             format: binary
